@@ -306,6 +306,27 @@ td,
   color: var(--muted);
 }
 
+.article-callout {
+  margin-top: 20px;
+  padding: 20px 22px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+}
+
+.article-callout-kicker {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.article-callout p {
+  margin-top: 0;
+  color: var(--fg);
+}
+
 .article-break {
   width: 72px;
   height: 1px;
