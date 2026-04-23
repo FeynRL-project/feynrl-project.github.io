@@ -10,6 +10,8 @@ FeynRL is motivated by this gap.
 
 FeynRL is not meant to be just another post-training framework, and it is not primarily feature-focused. Its purpose is more specific: to make the systems required for realistic large-model training available while keeping the algorithmic layer as modular, legible, and separable as possible. The goal is to make it easier to study and build new RL methods for large models without turning every algorithmic idea into a large infrastructure project. The same applies in reverse: someone working on the systems side — a new rollout engine, a more efficient async scheduler, a different weight-sync backend — should be able to do that without wading through algorithm code. FeynRL is intended to lower friction on both ends of the spectrum.
 
+![FeynRL separates data, system, and algorithm concerns](assets/episode_one/feynrl_separation.png)
+
 That separation of concerns is the central design principle of FeynRL. If someone wants to build a new RL algorithm, they should not need to work through a deeply entangled codebase spanning rollout workers, orchestration, data plumbing, and distributed execution just to change a loss or update rule. Conversely, if someone wants to build a new rollout engine, improve async scheduling, or work on the systems side, they should be able to do that without touching every algorithm implementation. FeynRL tries to keep these pieces as separable as possible so work on one layer does not require rewriting the others.
 
 This is also why FeynRL should be viewed as orthogonal to existing frameworks rather than as a criticism of them. Many current frameworks are strong, highly optimized, and very useful. FeynRL is built around a different tradeoff: it prioritizes clarity, locality of change, and method development rather than the widest possible feature surface. The aim is not to avoid systems work, but to structure it so that it does not dominate the algorithmic layer.
@@ -22,7 +24,10 @@ Concretely, FeynRL supports supervised fine-tuning, preference learning, and rei
 
 Under the hood, FeynRL is organized along three axes that can be worked on independently: **algorithms** (the loss and update rules), **rollouts** (generation, rewards, and replay), and **orchestration** (distributed execution and weight synchronization between the training and inference engines). These layers communicate through narrow interfaces, so a new RL method is usually a new loss and update rule rather than a rewrite of the execution graph. The same configuration system and workflow cover SFT, DPO, and RL, which makes head-to-head comparisons within the framework tractable.
 
-Where algorithms and systems interact most visibly is the training–rollout schedule, and FeynRL supports two modes. In **sync mode**, each epoch generates all rollouts, trains on them, synchronizes the updated weights to the rollout engines, and repeats. This is fully on-policy, easy to reason about, and the right default when data freshness matters more than throughput. In **overlap mode**, generation and training run concurrently on separate GPU pools. A persistent producer continuously feeds prompts to the rollout engines through a bounded queue; each engine keeps generation pipelined so there is always one batch in flight; and a second bounded queue returns completed rollouts to a replay buffer that feeds training. At the end of each round, a single weight synchronization fires: generation briefly drains, the new policy weights are gathered on the training side while the drain completes, broadcast to the rollout engines, and generation resumes. A configurable bound on how far the replay data may lag behind the current policy keeps the staleness–throughput tradeoff explicit rather than emergent.
+Where algorithms and systems interact most visibly is the training-rollout schedule. FeynRL supports two modes:
+
+- **Sync mode:** each epoch generates all rollouts, trains on them, synchronizes the updated weights to the rollout engines, and repeats. This is fully on-policy, easy to reason about, and the right default when data freshness matters more than throughput.
+- **Overlap mode:** generation and training run concurrently on separate GPU pools. A persistent producer continuously feeds prompts to the rollout engines through a bounded queue; each engine keeps generation pipelined so there is always one batch in flight; and a second bounded queue returns completed rollouts to a replay buffer that feeds training. At the end of each round, a single weight synchronization fires: generation briefly drains, the new policy weights are gathered on the training side while the drain completes, broadcast to the rollout engines, and generation resumes. A configurable bound on how far the replay data may lag behind the current policy keeps the staleness-throughput tradeoff explicit rather than emergent.
 
 Sync and overlap compute the same thing; they differ only in how generation and training are interleaved. Sync serialises them for clarity and strict on-policy data; overlap runs them concurrently to reclaim GPU idle time when generation is the bottleneck.
 
@@ -30,7 +35,23 @@ Sync and overlap compute the same thing; they differ only in how generation and 
 
 ## Results
 
-The benchmark summaries and training curves for the release are now collected on the homepage.
+The initial release benchmarks show the Qwen2.5-1.5B-Instruct run improving average pass@1 from 12.0% to 12.2% and pass@16 from 26.4% to 27.0%, while the Qwen3-4B-Thinking-2507 run moves from 12.2% to 27.0% at pass@1 and from 19.7% to 40.2% at pass@16.
+
+The results set on the homepage will continue to expand as more runs are added.
+
+![Reward curve for Qwen2.5-1.5B-Instruct](assets/episode_one/feynrl_reward_curve.png)
+
+| qwen2.5-1.5b-instruct | pass@1 | pass@16 |
+| --- | ---: | ---: |
+| base | 12.0% | 26.4% |
+| feynrl | 12.2% | 27.0% |
+
+![Reward curve for Qwen3-4B-Thinking-2507](assets/episode_one/feynrl_reward_curve_qwen3.png)
+
+| qwen3-4b-thinking-2507 | pass@1 | pass@16 |
+| --- | ---: | ---: |
+| base | 12.2% | 19.7% |
+| feynrl | 27.0% | 40.2% |
 
 See [the homepage results section](../index.html#results) for the compact results view.
 
