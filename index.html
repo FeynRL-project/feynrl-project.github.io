@@ -14,119 +14,57 @@
   <main class="page">
     <header class="hero">
       <p class="kicker">FeynRL</p>
-      <h1>algorithm-first post-training for large models</h1>
+      <h1>Algorithm-First Post-Training for Large Models</h1>
       <p class="lede">
-        Built to keep algorithms, rollouts, and orchestration separate enough that new
-        methods stay easy to implement and inspect.
+        Built to keep algorithms, rollouts, and orchestration separate enough that new methods stay easy to implement and inspect.
       </p>
       <div class="actions">
         <a class="button button-primary" href="https://github.com/boson-ai/FeynRL" target="_blank"
-          rel="noreferrer">repository</a>
-        <a class="button" href="blogs/episode_one.html">episode one</a>
+          rel="noreferrer">Repository</a>
+        <a class="button" href="blogs/episode_one.html">Episode One</a>
       </div>
     </header>
 
     <section class="section">
       <div class="section-head">
-        <span class="label">project</span>
-        <h2>three layers, minimal coupling</h2>
+        <span class="label">Project</span>
+        <h2>Project</h2>
       </div>
-      <div class="grid grid-three">
+      <p class="section-copy">
+        FeynRL (pronounced "FineRL") is an algorithm-first framework for post-training and fine-tuning large models. It supports supervised fine-tuning, preference learning, and reinforcement learning, and it is built for researchers and engineers who want to understand, modify, and develop new methods without fighting the infrastructure.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="label">News</span>
+        <h2>News</h2>
+      </div>
+      <div class="grid grid-two">
         <article class="card">
-          <h3>algorithms</h3>
-          <p>New losses and update rules should stay local rather than leaking across the stack.</p>
+          <h3>Episode 01</h3>
+          <p>Shifting the focus back to the RL algorithm.</p>
+          <a class="inline-link" href="blogs/episode_one.html">Read Post</a>
         </article>
         <article class="card">
-          <h3>rollouts</h3>
-          <p>Sync and overlap modes make the throughput versus freshness tradeoff explicit.</p>
-        </article>
-        <article class="card">
-          <h3>orchestration</h3>
-          <p>Distributed training remains visible instead of buried under heavy abstractions.</p>
+          <h3>Source</h3>
+          <p>The homepage and framing are based on the main FeynRL repository.</p>
+          <a class="inline-link" href="https://github.com/boson-ai/FeynRL" target="_blank" rel="noreferrer">Open
+            GitHub</a>
         </article>
       </div>
     </section>
 
     <section class="section" id="results">
       <div class="section-head">
-        <span class="label">results</span>
-        <h2>learning curves</h2>
+        <span class="label">Results</span>
+        <h2>Results</h2>
       </div>
-      <div class="grid grid-two">
-        <article class="card chart-card">
-          <img src="blogs/assets/episode_one/feynrl_reward_curve.png" alt="Reward curve for Qwen2.5-1.5B-Instruct">
-          <div class="card-copy">
-            <h3>qwen2.5-1.5b-instruct</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>run</th>
-                  <th>pass@1</th>
-                  <th>pass@16</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>base</td>
-                  <td>12.0%</td>
-                  <td>26.4%</td>
-                </tr>
-                <tr>
-                  <td>feynrl</td>
-                  <td>12.2%</td>
-                  <td>27.0%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-        <article class="card chart-card">
-          <img src="blogs/assets/episode_one/feynrl_reward_curve_qwen3.png" alt="Reward curve for Qwen3-4B-Thinking-2507">
-          <div class="card-copy">
-            <h3>qwen3-4b-thinking-2507</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>run</th>
-                  <th>pass@1</th>
-                  <th>pass@16</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>base</td>
-                  <td>12.2%</td>
-                  <td>19.7%</td>
-                </tr>
-                <tr>
-                  <td>feynrl</td>
-                  <td>27.0%</td>
-                  <td>40.2%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <span class="label">blog</span>
-        <h2>release notes and design notes</h2>
-      </div>
-      <div class="grid grid-two">
-        <article class="card">
-          <h3>episode 01</h3>
-          <p>Shifting the focus back to the RL algorithm.</p>
-          <a class="inline-link" href="blogs/episode_one.html">read post</a>
-        </article>
-        <article class="card">
-          <h3>source</h3>
-          <p>The homepage and framing are based on the main FeynRL repository.</p>
-          <a class="inline-link" href="https://github.com/boson-ai/FeynRL" target="_blank" rel="noreferrer">open
-            github</a>
-        </article>
+      <p class="section-copy">
+        Training curves, benchmark summaries, and release metrics now live on a dedicated results page and will continue to expand with new runs.
+      </p>
+      <div class="actions">
+        <a class="button button-cta" href="results.html">Open Results Page</a>
       </div>
     </section>
   </main>

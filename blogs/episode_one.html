@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FeynRL | Episode 01</title>
   <meta name="description"
-    content="Episode 01 of the FeynRL blog series: shifting the focus back to the RL algorithm.">
+    content="Episode 01 of the FeynRL blog series: Shifting the Focus Back to the RL Algorithm.">
   <link rel="stylesheet" href="../styles.css">
 </head>
 
@@ -14,80 +14,49 @@
   <main class="page page-article">
     <header class="article-header">
       <p class="kicker">Episode 01</p>
-      <h1>shifting the focus back to the RL algorithm</h1>
-      <p class="article-meta">FeynRL blog series</p>
+      <h1>Shifting the Focus Back to the RL Algorithm</h1>
+      <p class="article-meta">FeynRL Blog Series</p>
       <div class="actions">
-        <a class="button button-primary" href="../index.html">home</a>
-        <a class="button" href="https://github.com/boson-ai/FeynRL" target="_blank" rel="noreferrer">repository</a>
+        <a class="button button-primary" href="../index.html">Home</a>
+        <a class="button" href="https://github.com/boson-ai/FeynRL" target="_blank" rel="noreferrer">Repository</a>
       </div>
     </header>
 
     <article class="article-body">
       <p>
-        Reinforcement learning has always had a reputation for brittleness. That reputation is
-        not accidental.
+        Reinforcement learning has always had a reputation for brittleness, and not by accident: the learner collects data by acting under a policy, optimizes using rewards that are often imperfect or delayed, and repeatedly updates the very policy that determines future data. That makes RL fundamentally different from fixed-data supervised learning and highly sensitive to reward design, exploration, optimization, and the interaction between data collection and policy improvement.
       </p>
 
       <p>
-        RL is a particularly general learning framework, but it is also intrinsically difficult:
-        the learner must collect data by acting under a policy, optimize using rewards that are
-        often imperfect or delayed, and repeatedly update the very policy that determines future
-        data.
-      </p>
-
-      <p>
-        These difficulties become more pronounced in large models.
-      </p>
-
-      <p>
-        RL for LLMs and VLMs adds reward models or judges, expensive rollouts, distributed
-        training, orchestration, synchronization, and other heavy systems concerns.
-      </p>
-
-      <p>
-        Better systems make large-scale RL feasible; they do not solve RL's core problems such
-        as reward misspecification, sparse or delayed feedback, credit assignment, exploration,
-        or stale policy-dependent data.
-      </p>
-
-      <p>
-        FeynRL is motivated by this gap. Its purpose is to make the systems required for
-        realistic large-model training available while keeping the algorithmic layer as modular,
-        legible, and separable as possible.
+        These difficulties become more pronounced in large models. RL for LLMs and VLMs adds reward models or judges, expensive rollouts, distributed training, orchestration, synchronization, and other heavy systems concerns. Better systems make large-scale RL feasible, but they do not solve RL's core problems such as reward misspecification, sparse or delayed feedback, credit assignment, exploration, or stale policy-dependent data. FeynRL is motivated by this gap: it makes the systems required for realistic large-model training available while keeping the algorithmic layer modular, legible, and separable.
       </p>
 
       <img src="assets/episode_one/feynrl_separation.png" alt="FeynRL separates data, system, and algorithm concerns">
 
       <div class="article-break" aria-hidden="true"></div>
 
+      <h2>High-Level Overview</h2>
+
       <p>
-        That separation of concerns is the central design principle. If someone wants to build a
-        new RL algorithm, they should not need to work through a deeply entangled codebase
-        spanning rollout workers, orchestration, data plumbing, and distributed execution just
-        to change a loss or update rule.
+        That separation of concerns is the central design principle. If someone wants to build a new RL algorithm, they should not need to work through a deeply entangled codebase spanning rollout workers, orchestration, data plumbing, and distributed execution just to change a loss or update rule. At the same time, this does not mean FeynRL is a toy framework: it is designed to support realistic large-model post-training with the systems needed to run at scale while remaining interpretable enough that researchers can understand what is happening and modify it without rewriting the whole stack.
       </p>
 
       <p>
-        Importantly, this does not mean FeynRL is a toy framework. It is designed to support
-        realistic large-model post-training with the systems needed to run at scale, while
-        remaining interpretable enough that researchers can understand what is happening and
-        modify it without rewriting the whole stack.
+        Concretely, FeynRL supports supervised fine-tuning, preference learning, and reinforcement learning in a shared structure. It includes methods such as SFT, DPO, PPO, GRPO, CISPO, and P3O, together with rollout engines such as <a href="https://github.com/vllm-project/vllm" target="_blank" rel="noreferrer">vLLM</a>, orchestration with <a href="https://github.com/ray-project/ray" target="_blank" rel="noreferrer">Ray</a>, distributed optimization with <a href="https://github.com/microsoft/DeepSpeed" target="_blank" rel="noreferrer">DeepSpeed</a>, sync and overlap execution modes, and modular reward, data, and evaluation layers. These features matter not because the project is trying to maximize scope, but because they provide the minimum substrate needed to investigate RL methods seriously at large-model scale while keeping the components separable.
       </p>
+
+      <p>
+        Under the hood, FeynRL is organized along three axes that can be worked on independently: algorithms, rollouts, and orchestration. These layers communicate through narrow interfaces, so a new RL method is usually a new loss and update rule rather than a rewrite of the execution graph.
+      </p>
+
+      <img src="assets/episode_one/feynrl_architecture.png" alt="FeynRL architecture across algorithms, rollouts, and orchestration">
 
       <div class="article-break" aria-hidden="true"></div>
 
-      <h2>a closer look at the architecture</h2>
+      <h2>Sync vs Overlap</h2>
 
       <p>
-        Under the hood, FeynRL is organized along three axes that can be worked on
-        independently: algorithms, rollouts, and orchestration. These layers communicate
-        through narrow interfaces, so a new RL method is usually a new loss and update rule
-        rather than a rewrite of the execution graph.
-      </p>
-
-      <p>
-        Where algorithms and systems interact most visibly is the training-rollout schedule.
-        FeynRL supports two modes:
+        Where algorithms and systems interact most visibly is the training-rollout schedule, and FeynRL supports two modes:
       </p>
 
       <ul>
@@ -101,79 +70,88 @@
         </li>
       </ul>
 
-      <img src="assets/episode_one/feynrl_sync_vs_async.png" alt="FeynRL sync vs overlap mode">
+      <img src="assets/episode_one/sync_vs_overlap.png" alt="FeynRL sync vs overlap mode">
 
       <div class="article-break" aria-hidden="true"></div>
 
-      <p>
-        The initial release benchmarks show the Qwen2.5-1.5B-Instruct run improving average
-        pass@1 from 12.0% to 12.2% and pass@16 from 26.4% to 27.0%, while the
-        Qwen3-4B-Thinking-2507 run moves from 12.2% to 27.0% at pass@1 and from 19.7% to
-        40.2% at pass@16.
-      </p>
+      <h2>Overlap Mode</h2>
 
       <p>
-        The results set on the homepage will continue to expand as more runs are added.
+        In overlap mode, generation and training run concurrently on separate GPU pools, with bounded queues, replay, and periodic weight synchronization making the throughput-staleness tradeoff explicit.
       </p>
 
-      <div class="grid grid-two">
-        <article class="card chart-card">
-          <img src="assets/episode_one/feynrl_reward_curve.png" alt="Reward curve for Qwen2.5-1.5B-Instruct">
-          <div class="card-copy">
-            <h3>qwen2.5-1.5b-instruct</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>run</th>
-                  <th>pass@1</th>
-                  <th>pass@16</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>base</td>
-                  <td>12.0%</td>
-                  <td>26.4%</td>
-                </tr>
-                <tr>
-                  <td>feynrl</td>
-                  <td>12.2%</td>
-                  <td>27.0%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-        <article class="card chart-card">
-          <img src="assets/episode_one/feynrl_reward_curve_qwen3.png" alt="Reward curve for Qwen3-4B-Thinking-2507">
-          <div class="card-copy">
-            <h3>qwen3-4b-thinking-2507</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>run</th>
-                  <th>pass@1</th>
-                  <th>pass@16</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>base</td>
-                  <td>12.2%</td>
-                  <td>19.7%</td>
-                </tr>
-                <tr>
-                  <td>feynrl</td>
-                  <td>27.0%</td>
-                  <td>40.2%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
+      <img src="assets/episode_one/overlap_arch.png" alt="FeynRL overlap mode architecture">
+
+      <div class="article-break" aria-hidden="true"></div>
+
+      <h2>Results</h2>
+
+      <p>
+        The current release includes two initial experiments, and the results page will continue to expand as more runs are added.
+      </p>
+
+      <div class="actions">
+        <a class="button button-cta" href="../results.html">Open Results Page</a>
+        <a class="button" href="https://github.com/boson-ai/FeynRL/blob/main/examples/RESULTS.md" target="_blank" rel="noreferrer">Open RESULTS.md</a>
       </div>
 
-      <a class="inline-link" href="../index.html#results">view results on the homepage</a>
+      <div class="results-stack">
+        <article class="card">
+          <h3><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank" rel="noreferrer">Qwen2.5-1.5B-Instruct</a> on <a href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a></h3>
+          <p>
+            Training data comes from <a href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>. Evaluation uses the shared mathematical reasoning benchmark suite reported across the release, spanning <a href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>, <a href="https://huggingface.co/datasets/HuggingFaceH4/aime_2024" target="_blank" rel="noreferrer">AIME</a>, <a href="https://huggingface.co/datasets/AI-MO/aimo-validation-amc" target="_blank" rel="noreferrer">AMC</a>, <a href="https://huggingface.co/datasets/meituan-longcat/AMO-Bench" target="_blank" rel="noreferrer">AMO</a>, <a href="https://huggingface.co/datasets/MathArena/brumo_2025" target="_blank" rel="noreferrer">Brumo</a>, <a href="https://huggingface.co/datasets/MathArena/hmmt_feb_2025" target="_blank" rel="noreferrer">HMMT</a>, and <a href="https://huggingface.co/datasets/Hothan/OlympiadBench" target="_blank" rel="noreferrer">Olympiad-style</a> sets.
+          </p>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Pass@1</th>
+                <th>Pass@16</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Base</td>
+                <td>12.0%</td>
+                <td>26.4%</td>
+              </tr>
+              <tr>
+                <td>FeynRL</td>
+                <td>12.2%</td>
+                <td>27.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h3><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank" rel="noreferrer">Qwen3-4B-Thinking-2507</a> on <a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank" rel="noreferrer">DeepScaler</a></h3>
+          <p>
+            Training data comes from the <a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank" rel="noreferrer">DeepScaler preview dataset</a>. Evaluation again uses the same benchmark suite, with prompt formatting aligned to the model's released setup.
+          </p>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Pass@1</th>
+                <th>Pass@16</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Base</td>
+                <td>12.2%</td>
+                <td>19.7%</td>
+              </tr>
+              <tr>
+                <td>FeynRL</td>
+                <td>27.0%</td>
+                <td>40.2%</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
     </article>
   </main>
 </body>
