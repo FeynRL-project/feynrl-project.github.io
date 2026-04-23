@@ -1,0 +1,268 @@
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #5f5f5f;
+  --line: #d8d8d8;
+  --accent: #0f766e;
+  --accent-soft: #ecf8f6;
+  --max-width: 1040px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.page {
+  width: min(calc(100% - 32px), var(--max-width));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+
+.page-article {
+  width: min(calc(100% - 32px), 760px);
+}
+
+.hero,
+.section {
+  border-top: 1px solid var(--fg);
+  padding-top: 24px;
+}
+
+.section {
+  margin-top: 40px;
+}
+
+.kicker,
+.label {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-transform: lowercase;
+}
+
+p,
+th,
+td,
+.button,
+.inline-link {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.lede {
+  max-width: 64ch;
+  margin-top: 16px;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.button,
+.inline-link {
+  text-decoration: none;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--fg);
+}
+
+.button-primary {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.button:hover,
+.inline-link:hover {
+  color: var(--accent);
+}
+
+.section-head {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  border: 1px solid var(--line);
+  padding: 18px;
+}
+
+.card p {
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+.article-header {
+  border-top: 1px solid var(--fg);
+  padding-top: 24px;
+}
+
+.article-meta {
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+.article-body {
+  margin-top: 28px;
+  border-top: 1px solid var(--fg);
+  padding-top: 24px;
+}
+
+.article-body p {
+  margin-top: 16px;
+  color: var(--muted);
+}
+
+.article-break {
+  width: 72px;
+  height: 1px;
+  margin-top: 28px;
+  background: var(--line);
+}
+
+.article-body h2 {
+  margin-top: 36px;
+}
+
+.article-body img {
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid var(--line);
+}
+
+.chart-card {
+  padding: 0;
+}
+
+.chart-card img {
+  border-bottom: 1px solid var(--line);
+  background: #fafafa;
+}
+
+.card-copy {
+  padding: 18px;
+}
+
+table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.inline-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .grid-three,
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    width: min(calc(100% - 20px), var(--max-width));
+    padding: 28px 0 40px;
+  }
+
+  .hero,
+  .section {
+    padding-top: 18px;
+  }
+
+  .section {
+    margin-top: 28px;
+  }
+}

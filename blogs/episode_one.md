@@ -26,8 +26,12 @@ Where algorithms and systems interact most visibly is the training–rollout sch
 
 Sync and overlap compute the same thing; they differ only in how generation and training are interleaved. Sync serialises them for clarity and strict on-policy data; overlap runs them concurrently to reclaim GPU idle time when generation is the bottleneck.
 
-![FeynRL sync vs. overlap mode](feynrl_sync_vs_async.png)
+![FeynRL sync vs. overlap mode](assets/episode_one/feynrl_sync_vs_async.png)
 
-Concrete numbers on the benchmarks we have tested, together with the configs and launch scripts used to produce each result, live in the [experiments section](https://github.com/FeynRL-project/FeynRL/tree/main/experiments) of the repository, so every run in the release is directly reproducible.
+## Results
+
+The benchmark summaries and training curves for the release are now collected on the homepage.
+
+See [the homepage results section](../index.html#results) for the compact results view.
 
 The motivation for releasing FeynRL is therefore simple. Progress in RL for large models will require more than better systems for running current recipes faster. It will also require infrastructure that makes algorithmic questions easier to isolate, failure modes easier to understand, and new methods easier to build. FeynRL is an attempt to provide that layer: not a replacement for other frameworks, but a framework with a specific purpose.

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeynRL | Episode 01</title>
+  <meta name="description"
+    content="Episode 01 of the FeynRL blog series: shifting the focus back to the RL algorithm.">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+  <main class="page page-article">
+    <header class="article-header">
+      <p class="kicker">Episode 01</p>
+      <h1>shifting the focus back to the RL algorithm</h1>
+      <p class="article-meta">FeynRL blog series</p>
+      <div class="actions">
+        <a class="button button-primary" href="../index.html">home</a>
+        <a class="button" href="https://github.com/boson-ai/FeynRL" target="_blank" rel="noreferrer">repository</a>
+      </div>
+    </header>
+
+    <article class="article-body">
+      <p>
+        Reinforcement learning has always had a reputation for brittleness. That reputation is
+        not accidental.
+      </p>
+
+      <p>
+        RL is a particularly general learning framework, but it is also intrinsically difficult:
+        the learner must collect data by acting under a policy, optimize using rewards that are
+        often imperfect or delayed, and repeatedly update the very policy that determines future
+        data.
+      </p>
+
+      <p>
+        These difficulties become more pronounced in large models.
+      </p>
+
+      <p>
+        RL for LLMs and VLMs adds reward models or judges, expensive rollouts, distributed
+        training, orchestration, synchronization, and other heavy systems concerns.
+      </p>
+
+      <p>
+        Better systems make large-scale RL feasible; they do not solve RL's core problems such
+        as reward misspecification, sparse or delayed feedback, credit assignment, exploration,
+        or stale policy-dependent data.
+      </p>
+
+      <p>
+        FeynRL is motivated by this gap. Its purpose is to make the systems required for
+        realistic large-model training available while keeping the algorithmic layer as modular,
+        legible, and separable as possible.
+      </p>
+
+      <div class="article-break" aria-hidden="true"></div>
+
+      <p>
+        That separation of concerns is the central design principle. If someone wants to build a
+        new RL algorithm, they should not need to work through a deeply entangled codebase
+        spanning rollout workers, orchestration, data plumbing, and distributed execution just
+        to change a loss or update rule.
+      </p>
+
+      <p>
+        Importantly, this does not mean FeynRL is a toy framework. It is designed to support
+        realistic large-model post-training with the systems needed to run at scale, while
+        remaining interpretable enough that researchers can understand what is happening and
+        modify it without rewriting the whole stack.
+      </p>
+
+      <div class="article-break" aria-hidden="true"></div>
+
+      <h2>a closer look at the architecture</h2>
+
+      <p>
+        Under the hood, FeynRL is organized along three axes that can be worked on
+        independently: algorithms, rollouts, and orchestration. These layers communicate
+        through narrow interfaces, so a new RL method is usually a new loss and update rule
+        rather than a rewrite of the execution graph.
+      </p>
+
+      <p>
+        Where algorithms and systems interact most visibly is the training-rollout schedule,
+        and FeynRL supports two modes.
+      </p>
+
+      <p>
+        In sync mode, each epoch generates all rollouts, trains on them, synchronizes the
+        updated weights to the rollout engines, and repeats.
+      </p>
+
+      <p>
+        In overlap mode, generation and training run concurrently on separate GPU pools.
+      </p>
+
+      <img src="assets/episode_one/feynrl_sync_vs_async.png" alt="FeynRL sync vs overlap mode">
+
+      <div class="article-break" aria-hidden="true"></div>
+
+      <p>
+        The benchmark summaries and training curves for the release live on the homepage so the
+        post can stay focused on the architecture and motivation.
+      </p>
+
+      <a class="inline-link" href="../index.html#results">view results on the homepage</a>
+    </article>
+  </main>
+</body>
+
+</html>
