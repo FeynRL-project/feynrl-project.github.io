@@ -42,10 +42,6 @@ In async mode, generation and training run concurrently on separate GPU pools, w
 
 We have run extensive experiments with FeynRL across a range of models, datasets, and methods. This release surfaces the first set of those results; more will follow on an ongoing basis as the work continues.
 
-See the [results page](../results.html) for the full learning curves and release metrics.
-
-See also [`examples/README.md`](https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md) in the main repository.
-
 Where available, we also include the same-model framework comparison averages from the main repository. It is worth noting that while we do not apply any reward shaping or specific normalization beyond what is discussed in the repository, other frameworks do. Even so, we are already able to obtain results comparable to other common frameworks in this first release.
 
 ### [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) on [GSM8K](https://huggingface.co/datasets/openai/gsm8k)
@@ -70,4 +66,6 @@ Training data comes from the [DeepScaler preview dataset](https://huggingface.co
 | Baseline | 12.2% | 19.7% | - |
 | FeynRL | 27.0% | 40.2% | **0.565** |
 | [AReaL](https://github.com/inclusionAI/AReaL) | **37.3%** | **53.4%** | 0.502 |
+
+Explore the [results page](../results.html) and [`examples/README.md`](https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md) for detailed information and logs about these experiments, along with the scripts to re-run them.
  
