@@ -38,7 +38,7 @@ In async mode, generation and training run concurrently on separate GPU pools, w
 
 ![FeynRL async mode architecture](assets/episode_one/overlap_arch.png)
 
-## Results
+## Experiments
 
 We have run extensive experiments with FeynRL across a range of models, datasets, and methods. This release surfaces the first set of those results; more will follow on an ongoing basis as the work continues.
 
@@ -67,5 +67,5 @@ Training data comes from the [DeepScaler preview dataset](https://huggingface.co
 | FeynRL | 27.0% | 40.2% | **0.565** |
 | [AReaL](https://github.com/inclusionAI/AReaL) | **37.3%** | **53.4%** | 0.502 |
 
-Explore the [results page](../results.html) and [`examples/README.md`](https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md) for detailed information and logs about these experiments, along with the scripts to re-run them.
+Explore the [experiments page](../results.html) and [GitHub](https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md) for detailed information, logs, and scripts to re-run them.
  
