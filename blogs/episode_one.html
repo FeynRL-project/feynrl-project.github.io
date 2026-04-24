@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FeynRL | Episode 01</title>
+  <title>FeynRL | Don't Let Systems Swallow the Algorithm</title>
   <meta name="description"
-    content="Episode 01 of the FeynRL blog series: When the Algorithm Should Not Be Buried Under the Stack.">
+    content="Episode 01 of the FeynRL blog series: Don't Let Systems Swallow the Algorithm.">
   <link rel="stylesheet" href="../styles.css">
 </head>
 
@@ -14,7 +14,7 @@
   <main class="page page-article">
     <header class="article-header">
       <p class="kicker">Episode 01</p>
-      <h1>When the Algorithm Should Not Be Buried Under the Stack</h1>
+      <h1>Don't Let Systems Swallow the Algorithm</h1>
       <p class="article-meta">FeynRL Blog Series</p>
       <div class="actions">
         <a class="button button-primary" href="../index.html">Home</a>
@@ -55,39 +55,23 @@
       <div class="article-callout">
         <p class="article-callout-kicker">FeynRL Is Motivated by This Gap.</p>
         <p>
-          FeynRL is motivated by this gap. Its purpose is specific: to provide the systems needed for realistic
-          large-model training while keeping the algorithmic, data, and systems layers modular, legible, and separable.
-          The goal is to make it easier to build and study new RL methods for large models without turning every
-          algorithmic idea into an infrastructure project. In reverse, someone working on a new rollout engine, async
-          scheduler, or weight-sync backend should be able to do that without wading through algorithm code.
-          Importantly,
-          FeynRL is also built with training stability in mind: methods include the practical stabilization details
-          often
-          omitted from other implementations, which are typically what separates an algorithm that works on paper from
-          one
-          that works at scale.
+          FeynRL gives researchers the systems to run realistic large-model post-training, along with a structure
+          where algorithms, rollouts, and orchestration can be iterated on independently. A new loss is a new loss,
+          a new rollout engine is a new rollout engine, and the rest keeps working. FeynRL is also built with training
+          stability in mind: methods include the practical stabilization details often omitted from other
+          implementations, which are typically what separates an algorithm that works on paper from one that works at
+          scale.
         </p>
       </div>
-
-      <p>
-        FeynRL should be viewed as orthogonal to existing frameworks rather than a criticism of them. Many current
-        frameworks are powerful, highly optimized, and extremely useful. FeynRL is built around a different tradeoff: it
-        prioritizes clarity, locality of change, and method development while still supporting realistic large-scale
-        post-training. The goal is not to avoid systems work, but to keep systems complexity from swallowing the
-        algorithmic layer.
-      </p>
 
       <img src="assets/episode_one/feynrl_separation.png" alt="FeynRL separates data, system, and algorithm concerns">
 
       <h2>High-Level Overview</h2>
 
       <p>
-        Separation of concerns is the central design principle. Someone building a new RL algorithm should not need to
-        work through a deeply entangled codebase spanning rollout workers, orchestration, data plumbing, and distributed
-        execution just to change a loss or update rule. The reverse should also hold: someone building a new rollout
-        engine or sync strategy should not have to touch every algorithm implementation. At the same time, FeynRL is not
-        a toy framework. It supports realistic large-model post-training with the systems needed to run at scale, while
-        remaining interpretable enough to modify without rewriting the whole stack.
+        Separation of concerns is the central design principle. Algorithms, rollouts, and orchestration each live
+        behind narrow interfaces, so you can change one without touching the others. At the same time, FeynRL is built
+        for serious large-model post-training, with the systems needed to run real workloads at scale.
       </p>
 
       <p>
@@ -110,9 +94,8 @@
         orchestration with <a href="https://github.com/ray-project/ray" target="_blank" rel="noreferrer">Ray</a>,
         distributed optimization
         with <a href="https://github.com/microsoft/DeepSpeed" target="_blank" rel="noreferrer">DeepSpeed</a>, sync and
-        async execution modes, and modular reward, data, and evaluation layers. These components matter not because the
-        project is trying to maximize scope, but because they provide the minimum substrate needed to investigate RL
-        methods seriously at large-model scale while keeping the layers cleanly separable.
+        async execution modes, and modular reward, data, and evaluation layers. Together these components let you run
+        production-scale RL experiments out of the box, while keeping each layer independently modifiable.
       </p>
 
       <p>
@@ -162,7 +145,7 @@
       <h2>Results</h2>
 
       <p>
-        We have run extensive post-training experiments with FeynRL across a range of models, datasets, and methods.
+        We have run extensive experiments with FeynRL across a range of models, datasets, and methods.
         This release surfaces the first set of those results; more will follow on an ongoing basis as the work
         continues.
       </p>
@@ -175,8 +158,9 @@
 
       <p>
         Where available, we also include the same-model framework comparison averages from the main repository.
-        Despite any additional reward shaping or framework-specific optimization used elsewhere, we are already able
-        to obtain results comparable to other common frameworks in this first release.
+        It is worth noting that while we do not apply any reward shaping or specific normalization beyond what is
+        discussed in the repository, other frameworks do. Even so, we are already able to obtain results comparable to
+        other common frameworks in this first release.
       </p>
 
       <div class="results-stack">
