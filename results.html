@@ -28,7 +28,7 @@
 
         <section class="results-category is-active" data-family="math">
           <div class="section-head">
-            <span class="label">Math</span>
+            <span class="label section-title">Math</span>
           </div>
 
           <article class="card results-overview-card">
@@ -36,8 +36,7 @@
               <section class="results-column">
                 <h3><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank"
                     rel="noreferrer">Qwen2.5-1.5B-Instruct</a></h3>
-                <img src="blogs/assets/episode_one/feynrl_reward_curve.png"
-                  alt="Reward curve for Qwen2.5-1.5B-Instruct">
+                <img src="assets/feynrl_reward_curve.png" alt="Reward curve for Qwen2.5-1.5B-Instruct">
                 <table class="results-table">
                   <thead>
                     <tr>
@@ -47,8 +46,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Base</td>
+                    <tr class="baseline-row">
+                      <td>Baseline</td>
                       <td>12.0%</td>
                       <td>26.4%</td>
                     </tr>
@@ -63,8 +62,7 @@
               <section class="results-column">
                 <h3><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
                     rel="noreferrer">Qwen3-4B-Thinking-2507</a></h3>
-                <img src="blogs/assets/episode_one/feynrl_reward_curve_qwen3.png"
-                  alt="Reward curve for Qwen3-4B-Thinking-2507">
+                <img src="assets/feynrl_reward_curve_qwen3.png" alt="Reward curve for Qwen3-4B-Thinking-2507">
                 <table class="results-table">
                   <thead>
                     <tr>
@@ -74,8 +72,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Base</td>
+                    <tr class="baseline-row">
+                      <td>Baseline</td>
                       <td>12.2%</td>
                       <td>19.7%</td>
                     </tr>
@@ -126,10 +124,10 @@
                   <td><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
                       rel="noreferrer">Qwen3-4B-Thinking-2507</a></td>
                   <td><a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank"
-                      rel="noreferrer">DeepScaler preview dataset</a></td>
+                      rel="noreferrer">DeepScaler Preview</a></td>
                   <td>Primary release run uses overlap; dedicated sync vs overlap comparison uses a 4/4 training-rollout
                     GPU split.</td>
-                  <td>At 8 hours, sync reaches 0.526 reward and async reaches 0.584.</td>
+                  <td>At 4 hours, sync reaches 0.526 reward and async reaches 0.584.</td>
                 </tr>
               </tbody>
             </table>

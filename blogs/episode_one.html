@@ -18,7 +18,8 @@
       <p class="article-meta">FeynRL Blog Series</p>
       <div class="actions">
         <a class="button button-primary" href="../index.html">Home</a>
-        <a class="button" href="https://github.com/FeynRL-project/FeynRL" target="_blank" rel="noreferrer">Repository</a>
+        <a class="button" href="https://github.com/FeynRL-project/FeynRL" target="_blank"
+          rel="noreferrer">Repository</a>
       </div>
     </header>
 
@@ -91,8 +92,9 @@
 
       <p>
         Concretely, FeynRL supports supervised fine-tuning, preference learning, and reinforcement learning in a shared
-        structure. It includes methods such as <a href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/SFT/README.md"
-          target="_blank" rel="noreferrer">SFT</a>,
+        structure. It includes methods such as <a
+          href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/SFT/README.md" target="_blank"
+          rel="noreferrer">SFT</a>,
         <a href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/DPO/README.md" target="_blank"
           rel="noreferrer">DPO</a>,
         <a href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/PPO/README.md" target="_blank"
@@ -167,9 +169,15 @@
 
       <div class="actions">
         <a class="button button-cta" href="../results.html">Open Results Page</a>
-        <a class="button" href="https://github.com/FeynRL-project/FeynRL/blob/main/examples/RESULTS.md" target="_blank"
-          rel="noreferrer">Open RESULTS.md</a>
+        <a class="button" href="https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md" target="_blank"
+          rel="noreferrer">Open examples/README.md</a>
       </div>
+
+      <p>
+        Where available, we also include the same-model framework comparison averages from the main repository.
+        Despite any additional reward shaping or framework-specific optimization used elsewhere, we are already able
+        to obtain results comparable to other common frameworks in this first release.
+      </p>
 
       <div class="results-stack">
         <article class="card">
@@ -188,7 +196,9 @@
               rel="noreferrer">Brumo</a>, <a href="https://huggingface.co/datasets/MathArena/hmmt_feb_2025"
               target="_blank" rel="noreferrer">HMMT</a>, and <a
               href="https://huggingface.co/datasets/Hothan/OlympiadBench" target="_blank"
-              rel="noreferrer">Olympiad-style</a> sets.
+              rel="noreferrer">Olympiad-style</a> sets. The framework rows below use the same comparison tables from
+            the main repository; averages use each framework's available reported benchmarks, and the reward snapshot
+            reports the interpolated training reward after 1 hour.
           </p>
           <table class="results-table">
             <thead>
@@ -196,18 +206,46 @@
                 <th>Run</th>
                 <th>Pass@1</th>
                 <th>Pass@16</th>
+                <th>Reward @ 1h</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Base</td>
+              <tr class="baseline-row">
+                <td>Baseline</td>
                 <td>12.0%</td>
                 <td>26.4%</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>FeynRL</td>
-                <td>12.2%</td>
+                <td><strong>12.2%</strong></td>
                 <td>27.0%</td>
+                <td><strong>0.894</strong></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/inclusionAI/AReaL" target="_blank" rel="noreferrer">AReaL</a></td>
+                <td><strong>12.2%</strong></td>
+                <td>28.2%</td>
+                <td>0.654</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/ServiceNow/PipelineRL" target="_blank" rel="noreferrer">PipelineRL</a>
+                </td>
+                <td>10.8%</td>
+                <td>26.5%</td>
+                <td>0.751</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/huggingface/trl" target="_blank" rel="noreferrer">TRL</a></td>
+                <td>11.3%</td>
+                <td><strong>28.6%</strong></td>
+                <td>0.866</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/verl-project/verl" target="_blank" rel="noreferrer">veRL</a></td>
+                <td>10.7%</td>
+                <td>27.6%</td>
+                <td>0.890</td>
               </tr>
             </tbody>
           </table>
@@ -222,7 +260,12 @@
             Training data comes from the <a
               href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank"
               rel="noreferrer">DeepScaler preview dataset</a>. Evaluation again uses the same benchmark suite, with
-            prompt formatting aligned to the model's released setup.
+            prompt formatting aligned to the model's released setup. As above, framework averages use each
+            framework's available reported benchmarks from the comparison tables. The FeynRL row below now reflects
+            the latest async-engine evaluation artifacts under
+            <code>checkpoints/framework_comparisons/qwen3_4b_thinking_2507/wsp/FeynRL_async</code>, which currently
+            include 8 completed benchmark runs. For Qwen3, the FeynRL reward snapshot below references the
+            async/overlap comparison run and reports the interpolated training reward after 4 hours.
           </p>
           <table class="results-table">
             <thead>
@@ -230,18 +273,27 @@
                 <th>Run</th>
                 <th>Pass@1</th>
                 <th>Pass@16</th>
+                <th>Reward @ 4h</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Base</td>
+              <tr class="baseline-row">
+                <td>Baseline</td>
                 <td>12.2%</td>
                 <td>19.7%</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>FeynRL</td>
                 <td>27.0%</td>
                 <td>40.2%</td>
+                <td><strong>0.565</strong></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/inclusionAI/AReaL" target="_blank" rel="noreferrer">AReaL</a></td>
+                <td><strong>37.3%</strong></td>
+                <td><strong>53.4%</strong></td>
+                <td>0.502</td>
               </tr>
             </tbody>
           </table>

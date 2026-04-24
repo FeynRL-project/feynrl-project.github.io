@@ -48,23 +48,30 @@ We have run extensive post-training experiments with FeynRL across a range of mo
 
 See the [results page](../results.html) for the full learning curves and release metrics.
 
-See also [`examples/RESULTS.md`](https://github.com/FeynRL-project/FeynRL/blob/main/examples/RESULTS.md) in the main repository.
+See also [`examples/README.md`](https://github.com/FeynRL-project/FeynRL/blob/main/examples/README.md) in the main repository.
+
+Where available, we also include the same-model framework comparison averages from the main repository. Despite any additional reward shaping or framework-specific optimization used elsewhere, we are already able to obtain results comparable to other common frameworks in this first release.
 
 ### [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) on [GSM8K](https://huggingface.co/datasets/openai/gsm8k)
 
-Training data comes from [GSM8K](https://huggingface.co/datasets/openai/gsm8k). Evaluation uses the shared mathematical reasoning benchmark suite reported across the release, spanning [GSM8K](https://huggingface.co/datasets/openai/gsm8k), [AIME](https://huggingface.co/datasets/HuggingFaceH4/aime_2024), [AMC](https://huggingface.co/datasets/AI-MO/aimo-validation-amc), [AMO](https://huggingface.co/datasets/meituan-longcat/AMO-Bench), [Brumo](https://huggingface.co/datasets/MathArena/brumo_2025), [HMMT](https://huggingface.co/datasets/MathArena/hmmt_feb_2025), and [Olympiad-style](https://huggingface.co/datasets/Hothan/OlympiadBench) sets.
+Training data comes from [GSM8K](https://huggingface.co/datasets/openai/gsm8k). Evaluation uses the shared mathematical reasoning benchmark suite reported across the release, spanning [GSM8K](https://huggingface.co/datasets/openai/gsm8k), [AIME](https://huggingface.co/datasets/HuggingFaceH4/aime_2024), [AMC](https://huggingface.co/datasets/AI-MO/aimo-validation-amc), [AMO](https://huggingface.co/datasets/meituan-longcat/AMO-Bench), [Brumo](https://huggingface.co/datasets/MathArena/brumo_2025), [HMMT](https://huggingface.co/datasets/MathArena/hmmt_feb_2025), and [Olympiad-style](https://huggingface.co/datasets/Hothan/OlympiadBench) sets. The framework rows below use the same comparison tables from the main repository; averages use each framework's available reported benchmarks, and the reward snapshot reports the interpolated training reward after 1 hour.
 
-| Run | Pass@1 | Pass@16 |
-| --- | ---: | ---: |
-| Base | 12.0% | 26.4% |
-| FeynRL | 12.2% | 27.0% |
+| Run | Pass@1 | Pass@16 | Reward @ 1h |
+| --- | ---: | ---: | ---: |
+| Baseline | 12.0% | 26.4% | - |
+| FeynRL | **12.2%** | 27.0% | **0.894** |
+| [AReaL](https://github.com/inclusionAI/AReaL) | **12.2%** | 28.2% | 0.654 |
+| [PipelineRL](https://github.com/ServiceNow/PipelineRL) | 10.8% | 26.5% | 0.751 |
+| [TRL](https://github.com/huggingface/trl) | 11.3% | **28.6%** | 0.866 |
+| [veRL](https://github.com/verl-project/verl) | 10.7% | 27.6% | 0.890 |
 
 ### [Qwen3-4B-Thinking-2507](https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507) on [DeepScaler](https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset)
 
-Training data comes from the [DeepScaler preview dataset](https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset). Evaluation again uses the same benchmark suite, with prompt formatting aligned to the model's released setup.
+Training data comes from the [DeepScaler preview dataset](https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset). Evaluation again uses the same benchmark suite, with prompt formatting aligned to the model's released setup. As above, framework averages use each framework's available reported benchmarks from the comparison tables. The FeynRL row below now reflects the latest async-engine evaluation artifacts under `checkpoints/framework_comparisons/qwen3_4b_thinking_2507/wsp/FeynRL_async`, which currently include 8 completed benchmark runs. For Qwen3, the FeynRL reward snapshot below references the async/overlap comparison run and reports the interpolated training reward after 3.8 hours.
 
-| Run | Pass@1 | Pass@16 |
-| --- | ---: | ---: |
-| Base | 12.2% | 19.7% |
-| FeynRL | 27.0% | 40.2% |
+| Run | Pass@1 | Pass@16 | Reward @ 3.8h |
+| --- | ---: | ---: | ---: |
+| Baseline | 12.2% | 19.7% | - |
+| FeynRL | 21.1% | 38.9% | **0.565** |
+| [AReaL](https://github.com/inclusionAI/AReaL) | **37.3%** | **53.4%** | 0.502 |
  
