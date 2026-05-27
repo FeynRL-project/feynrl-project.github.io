@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeynRL | Off-Policy Robustness Results</title>
+  <meta name="description" content="Off-policy robustness results: temperature shift, FP8 mixed precision, and clip sensitivity.">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+  <main class="page page-article">
+    <header class="article-header">
+      <a class="result-back" href="../results.html">← All Experiments</a>
+      <p class="kicker">Results — Off-Policy Robustness</p>
+      <h1>Training Curves and Metrics</h1>
+      <p class="article-meta">Experiment Catalog</p>
+      <div class="actions">
+        <a class="button button-primary" href="../index.html">Home</a>
+        <a class="button" href="../blogs/episode_two.html">Episode Two</a>
+        <a class="button" href="../results.html">All Results</a>
+      </div>
+    </header>
+
+    <article class="article-body">
+
+      <div class="article-callout">
+        <p class="article-callout-kicker">What is off-policyness?</p>
+        <p>In production RL training, the policy used to generate rollouts is rarely identical to the policy being
+          updated. Mismatches arise from mixed-precision inference (e.g., BF16 training with FP8 rollout generation),
+          non-standard sampling temperatures, asynchronous pipeline depth, and other practical deployment constraints.
+          These differences shift the per-token importance ratios away from one, making the on-policy assumption
+          underlying standard clipping-based objectives increasingly fragile. The experiments below stress-test
+          this directly: each one introduces a controlled off-policy perturbation and measures how training stability
+          holds up. P3O responds through its adaptive effective sample size (ESS) regularizer, which tightens the
+          trust region when the batch diverges from the current policy — without any retuning.</p>
+      </div>
+
+      <h2 class="results-subsection-title">Temperature of Rollouts — Qwen3-4B-Thinking-2507</h2>
+
+      <div class="results-stack">
+        <article class="card chart-card">
+          <div class="results-columns">
+            <section class="results-column">
+              <h3>Temperature 0.6</h3>
+              <img src="experiments/off_policy/plots/temp_0.6_qwen34th.png"
+                alt="Reward curves for temperature 0.6 — Qwen3-4B-Thinking-2507">
+            </section>
+            <section class="results-column">
+              <h3>Temperature 1.2</h3>
+              <img src="experiments/off_policy/plots/temp_1.2_qwen34th.png"
+                alt="Reward curves for temperature 1.2 — Qwen3-4B-Thinking-2507">
+            </section>
+          </div>
+          <div class="card-copy">
+            <p>Sampling rollouts at T ≠ 1.0 uniformly shifts per-token log-probabilities, pushing importance ratios
+              off one across the entire batch. GRPO's fixed clip range cannot compensate; performance degrades at
+              both T = 0.6 and T = 1.2. P3O's ESS-driven trust level adapts to the induced ratio shift and maintains
+              stable training without retuning.</p>
+          </div>
+        </article>
+      </div>
+
+      <h2 class="results-subsection-title">BF16 Train + FP8 Rollout — Qwen3-4B-Thinking-2507</h2>
+
+      <div class="results-stack">
+        <article class="card chart-card">
+          <img src="experiments/off_policy/plots/fp8_qwen34th.png"
+            alt="Reward curves for BF16 train + FP8 rollout — Qwen3-4B-Thinking-2507">
+          <div class="card-copy">
+            <p>Mixed-precision pipelines that generate rollouts in FP8 and train in BF16 create systematic
+              log-probability mismatches, particularly at long rollout lengths, a phenomenon recently documented in
+              <a href="https://arxiv.org/abs/2601.14243" target="_blank" rel="noreferrer">Jet-RL (Xi et al., 2026)</a>.
+              GRPO collapses once the mismatch accumulates; P3O remains stable under the same conditions, enabling
+              faster FP8 rollout generation without sacrificing training quality.</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="results-note">
+        Experiments run on Qwen3-4B-Thinking-2507 with the
+        <a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank"
+          rel="noreferrer">DeepScaleR Preview</a> dataset on 8 × H100 GPUs. For the full benchmark evaluation under
+        FP8 and clip sensitivity sweeps, see the
+        <a href="../blogs/episode_two.html">Episode Two blog post</a> and
+        <a href="https://arxiv.org/pdf/2605.12380" target="_blank" rel="noreferrer">paper</a>.
+      </p>
+
+    </article>
+  </main>
+</body>
+
+</html>

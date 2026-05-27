@@ -1,0 +1,107 @@
+<section class="results-category is-active" data-family="math">
+  <div class="section-head">
+    <span class="label section-title">Math</span>
+  </div>
+
+  <article class="card results-overview-card">
+    <div class="results-columns">
+      <section class="results-column">
+        <h3><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank"
+            rel="noreferrer">Qwen2.5-1.5B-Instruct</a></h3>
+        <img src="assets/feynrl_reward_curve.png" alt="Reward curve for Qwen2.5-1.5B-Instruct">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Pass@1</th>
+              <th>Pass@16</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="baseline-row">
+              <td>Baseline</td>
+              <td>12.0%</td>
+              <td>26.4%</td>
+            </tr>
+            <tr>
+              <td>FeynRL</td>
+              <td>12.2%</td>
+              <td>27.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="results-column">
+        <h3><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
+            rel="noreferrer">Qwen3-4B-Thinking-2507</a></h3>
+        <img src="assets/feynrl_reward_curve_qwen3.png" alt="Reward curve for Qwen3-4B-Thinking-2507">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Pass@1</th>
+              <th>Pass@16</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="baseline-row">
+              <td>Baseline</td>
+              <td>12.2%</td>
+              <td>19.7%</td>
+            </tr>
+            <tr>
+              <td>FeynRL</td>
+              <td>27.0%</td>
+              <td>40.2%</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </article>
+
+  <p class="results-note">Evaluation uses a shared verifiable math benchmark suite spanning <a
+      href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>, <a
+      href="https://huggingface.co/datasets/HuggingFaceH4/aime_2024" target="_blank" rel="noreferrer">AIME</a>,
+    <a href="https://huggingface.co/datasets/AI-MO/aimo-validation-amc" target="_blank"
+      rel="noreferrer">AMC</a>, <a href="https://huggingface.co/datasets/meituan-longcat/AMO-Bench"
+      target="_blank" rel="noreferrer">AMO</a>, <a href="https://huggingface.co/datasets/MathArena/brumo_2025"
+      target="_blank" rel="noreferrer">Brumo</a>, <a
+      href="https://huggingface.co/datasets/MathArena/hmmt_feb_2025" target="_blank" rel="noreferrer">HMMT</a>,
+    and <a href="https://huggingface.co/datasets/Hothan/OlympiadBench" target="_blank"
+      rel="noreferrer">Olympiad-style</a> sets, with pass@1 and pass@16 computed from 16 samples per prompt at
+    temperature 1.0.
+  </p>
+
+  <div class="results-stack">
+    <table class="results-detail-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Training Data</th>
+          <th>Setup</th>
+          <th>Curve Snapshot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank"
+              rel="noreferrer">Qwen2.5-1.5B-Instruct</a></td>
+          <td><a href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>
+          </td>
+          <td>Dedicated sync vs overlap comparison with a 6/2 training-rollout GPU split.</td>
+          <td>At 1 hour, sync reaches 0.894 reward and async reaches 0.858.</td>
+        </tr>
+        <tr>
+          <td><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
+              rel="noreferrer">Qwen3-4B-Thinking-2507</a></td>
+          <td><a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank"
+              rel="noreferrer">DeepScaler Preview</a></td>
+          <td>Primary release run uses overlap; dedicated sync vs overlap comparison uses a 4/4 training-rollout
+            GPU split.</td>
+          <td>At 4 hours, sync reaches 0.526 reward and async reaches 0.584.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

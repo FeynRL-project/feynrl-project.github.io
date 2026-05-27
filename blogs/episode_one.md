@@ -21,6 +21,95 @@ Concretely, FeynRL supports supervised fine-tuning, preference learning, and rei
 
 Under the hood, FeynRL is organized along three axes that can be worked on independently: **algorithms** (the loss and update rules), **rollouts** (generation, rewards, and replay), and **orchestration** (distributed execution and weight synchronization between the training and inference engines). These layers communicate through narrow interfaces, so a new RL method is usually a new loss and update rule rather than a rewrite of the execution graph.
 
+Starting from the existing [GRPO](https://github.com/FeynRL-project/FeynRL/blob/main/algs/GRPO/grpo.py) implementation, the algorithmic change stays local inside `compute_policy_loss(...)`:
+
+We include this REINFORCE-style diff to show how easy a new algorithm is to implement when the surrounding systems stay fixed.
+
+<div class="gh-diff" role="group" aria-label="GRPO to REINFORCE split diff">
+  <div class="gh-diff-bar">
+    <div class="gh-diff-file">
+      <span class="gh-diff-file-icon" aria-hidden="true"></span>
+      <a href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/GRPO/grpo.py">algs/GRPO/grpo.py</a>
+    </div>
+    <span class="gh-diff-chip">Split</span>
+  </div>
+  <div class="gh-diff-columns" aria-hidden="true">
+    <span>Before</span>
+    <span>After</span>
+  </div>
+  <div class="gh-diff-hunk"><code>@@ compute_policy_loss(...)</code></div>
+  <div class="gh-diff-split">
+    <div class="gh-diff-pane">
+      <table class="gh-diff-side-table">
+        <tbody>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">1</td>
+            <td class="gh-diff-codecell"><code>raw_logratio = (logprobs - old_logprobs).to(torch.float32)</code></td>
+          </tr>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">2</td>
+            <td class="gh-diff-codecell"><code>logratio = torch.where(mask_bool, raw_logratio, torch.zeros_like(raw_logratio))</code></td>
+          </tr>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">3</td>
+            <td class="gh-diff-codecell"><code>ratio = torch.exp(logratio)</code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-del">
+            <td class="gh-diff-num">4</td>
+            <td class="gh-diff-codecell"><code>unclipped = ratio * adv</code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-del">
+            <td class="gh-diff-num">5</td>
+            <td class="gh-diff-codecell"><code>clip_adv = torch.clamp(ratio, 1.0 - self.clip_low, 1.0 + self.clip_high) * adv</code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-del">
+            <td class="gh-diff-num">6</td>
+            <td class="gh-diff-codecell"><code>pi_sum = -(torch.minimum(unclipped, clip_adv) * mask).sum()</code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-empty">
+            <td class="gh-diff-num gh-diff-num-empty"></td>
+            <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="gh-diff-pane">
+      <table class="gh-diff-side-table">
+        <tbody>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">1</td>
+            <td class="gh-diff-codecell"><code>raw_logratio = (logprobs - old_logprobs).to(torch.float32)</code></td>
+          </tr>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">2</td>
+            <td class="gh-diff-codecell"><code>logratio = torch.where(mask_bool, raw_logratio, torch.zeros_like(raw_logratio))</code></td>
+          </tr>
+          <tr class="gh-diff-row">
+            <td class="gh-diff-num">3</td>
+            <td class="gh-diff-codecell"><code>ratio = torch.exp(logratio)</code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-empty">
+            <td class="gh-diff-num gh-diff-num-empty"></td>
+            <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-empty">
+            <td class="gh-diff-num gh-diff-num-empty"></td>
+            <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-empty">
+            <td class="gh-diff-num gh-diff-num-empty"></td>
+            <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+          </tr>
+          <tr class="gh-diff-row gh-diff-row-add">
+            <td class="gh-diff-num">4</td>
+            <td class="gh-diff-codecell"><code>pi_sum = -(logprobs.to(torch.float32) * adv * mask).sum()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 ![FeynRL architecture across algorithms, rollouts, and orchestration](assets/episode_one/feynrl_architecture.png)
 
 ## Sync vs Async

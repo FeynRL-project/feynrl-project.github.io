@@ -5,136 +5,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FeynRL | Results</title>
-  <meta name="description" content="Training curves and benchmark metrics for the current FeynRL release.">
+  <meta name="description" content="Experiment results for the current FeynRL release, organized by experiment family.">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <main class="page page-article">
-    <header class="article-header">
-      <p class="kicker">Results</p>
-      <h1>Training Curves and Metrics</h1>
-      <p class="article-meta">Experiment Catalog</p>
+  <main class="page">
+    <header class="hero">
+      <div class="section-head">
+        <span class="label section-title">Results</span>
+      </div>
+      <h1>Experiment Catalog</h1>
+      <p class="lede">Training curves and benchmark metrics, organized by experiment family.</p>
       <div class="actions">
         <a class="button button-primary" href="index.html">Home</a>
-        <a class="button" href="blogs/episode_one.html">Episode One</a>
+        <a class="button" href="https://arxiv.org/pdf/2605.12380" target="_blank" rel="noreferrer">Paper</a>
       </div>
     </header>
 
-    <article class="article-body">
-      <p>This page collects the current release results and is organized by experiment family. </p>
+    <section class="section">
+      <!--
+        To add a new experiment family:
+          1. Create results/<slug>.html as a full result page.
+          2. Copy one .exp-card block below, update href, SVG, label, and meta.
+        Cards fill a 3-column grid and reflow automatically.
+      -->
+      <div class="exp-grid">
 
-      <section class="results-browser">
+        <!-- ── Math Reasoning ───────────────────────────────────── -->
+        <a class="exp-card" href="results/math.html">
+          <div class="exp-card-thumb">
+            <!--
+              Concept: a completion block (the model's answer) flows down to a
+              binary reward signal — checkmark for correct, cross for incorrect.
+            -->
+            <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="160" height="140" fill="#fafafa"/>
 
-        <section class="results-category is-active" data-family="math">
-          <div class="section-head">
-            <span class="label section-title">Math</span>
+              <!-- Completion card -->
+              <rect x="22" y="18" width="116" height="46" rx="3"
+                fill="white" stroke="#d8d8d8" stroke-width="1.2"/>
+              <!-- Placeholder text lines representing an answer -->
+              <line x1="34" y1="31" x2="98" y2="31" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+              <line x1="34" y1="40" x2="118" y2="40" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+              <line x1="34" y1="49" x2="78" y2="49" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Arrow down -->
+              <line x1="80" y1="68" x2="80" y2="82" stroke="#d8d8d8" stroke-width="1.2"/>
+              <polygon points="76,80 80,87 84,80" fill="#d8d8d8"/>
+
+              <!-- Correct outcome: teal check circle -->
+              <circle cx="52" cy="112" r="17" fill="#ecf8f6" stroke="#0f766e" stroke-width="1.3"/>
+              <path d="M 44,112 L 50,119 L 61,104"
+                fill="none" stroke="#0f766e" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Incorrect outcome: gray cross circle -->
+              <circle cx="108" cy="112" r="17" fill="white" stroke="#d8d8d8" stroke-width="1.3"/>
+              <line x1="100" y1="105" x2="116" y2="119" stroke="#d8d8d8" stroke-width="2" stroke-linecap="round"/>
+              <line x1="116" y1="105" x2="100" y2="119" stroke="#d8d8d8" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
+          <div class="exp-card-label">Math Reasoning</div>
+          <div class="exp-card-meta">Qwen2.5-1.5B · Qwen3-4B</div>
+        </a>
 
-          <article class="card results-overview-card">
-            <div class="results-columns">
-              <section class="results-column">
-                <h3><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank"
-                    rel="noreferrer">Qwen2.5-1.5B-Instruct</a></h3>
-                <img src="assets/feynrl_reward_curve.png" alt="Reward curve for Qwen2.5-1.5B-Instruct">
-                <table class="results-table">
-                  <thead>
-                    <tr>
-                      <th>Run</th>
-                      <th>Pass@1</th>
-                      <th>Pass@16</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="baseline-row">
-                      <td>Baseline</td>
-                      <td>12.0%</td>
-                      <td>26.4%</td>
-                    </tr>
-                    <tr>
-                      <td>FeynRL</td>
-                      <td>12.2%</td>
-                      <td>27.0%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </section>
-              <section class="results-column">
-                <h3><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
-                    rel="noreferrer">Qwen3-4B-Thinking-2507</a></h3>
-                <img src="assets/feynrl_reward_curve_qwen3.png" alt="Reward curve for Qwen3-4B-Thinking-2507">
-                <table class="results-table">
-                  <thead>
-                    <tr>
-                      <th>Run</th>
-                      <th>Pass@1</th>
-                      <th>Pass@16</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="baseline-row">
-                      <td>Baseline</td>
-                      <td>12.2%</td>
-                      <td>19.7%</td>
-                    </tr>
-                    <tr>
-                      <td>FeynRL</td>
-                      <td>27.0%</td>
-                      <td>40.2%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </section>
-            </div>
-          </article>
+        <!-- ── Off-Policy Robustness ────────────────────────────── -->
+        <a class="exp-card" href="results/off_policy.html">
+          <div class="exp-card-thumb">
+            <!--
+              Concept: two policy distributions (π_b and π_θ) shown as bell
+              curves — the behavior policy in gray/dashed, the current policy
+              in teal/solid — offset from each other to show the drift that
+              makes data off-policy.
+            -->
+            <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="160" height="140" fill="#fafafa"/>
 
-          <p class="results-note">Evaluation uses a shared verifiable math benchmark suite spanning <a
-              href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>, <a
-              href="https://huggingface.co/datasets/HuggingFaceH4/aime_2024" target="_blank" rel="noreferrer">AIME</a>,
-            <a href="https://huggingface.co/datasets/AI-MO/aimo-validation-amc" target="_blank"
-              rel="noreferrer">AMC</a>, <a href="https://huggingface.co/datasets/meituan-longcat/AMO-Bench"
-              target="_blank" rel="noreferrer">AMO</a>, <a href="https://huggingface.co/datasets/MathArena/brumo_2025"
-              target="_blank" rel="noreferrer">Brumo</a>, <a
-              href="https://huggingface.co/datasets/MathArena/hmmt_feb_2025" target="_blank" rel="noreferrer">HMMT</a>,
-            and <a href="https://huggingface.co/datasets/Hothan/OlympiadBench" target="_blank"
-              rel="noreferrer">Olympiad-style</a> sets, with pass@1 and pass@16 computed from 16 samples per prompt at
-            temperature 1.0.
-          </p>
+              <!-- Baseline -->
+              <line x1="10" y1="102" x2="150" y2="102" stroke="#e5e7eb" stroke-width="1"/>
 
-          <div class="results-stack">
-            <table class="results-detail-table">
-              <thead>
-                <tr>
-                  <th>Model</th>
-                  <th>Training Data</th>
-                  <th>Setup</th>
-                  <th>Curve Snapshot</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" target="_blank"
-                      rel="noreferrer">Qwen2.5-1.5B-Instruct</a></td>
-                  <td><a href="https://huggingface.co/datasets/openai/gsm8k" target="_blank" rel="noreferrer">GSM8K</a>
-                  </td>
-                  <td>Dedicated sync vs overlap comparison with a 6/2 training-rollout GPU split.</td>
-                  <td>At 1 hour, sync reaches 0.894 reward and async reaches 0.858.</td>
-                </tr>
-                <tr>
-                  <td><a href="https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507" target="_blank"
-                      rel="noreferrer">Qwen3-4B-Thinking-2507</a></td>
-                  <td><a href="https://huggingface.co/datasets/agentica-org/DeepScaleR-Preview-Dataset" target="_blank"
-                      rel="noreferrer">DeepScaler Preview</a></td>
-                  <td>Primary release run uses overlap; dedicated sync vs overlap comparison uses a 4/4 training-rollout
-                    GPU split.</td>
-                  <td>At 4 hours, sync reaches 0.526 reward and async reaches 0.584.</td>
-                </tr>
-              </tbody>
-            </table>
+              <!-- Bell curve 1: behavior policy π_b (gray, dashed) centered at x=57 -->
+              <path d="M 10,102 C 10,102 34,22 57,22 C 80,22 104,102 104,102"
+                fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4,2.5"/>
+
+              <!-- Bell curve 2: current policy π_θ (teal, solid) centered at x=96 -->
+              <path d="M 49,102 C 49,102 73,22 96,22 C 119,22 143,102 143,102"
+                fill="none" stroke="#0f766e" stroke-width="1.5"/>
+
+              <!-- Drift arrow between peaks -->
+              <line x1="63" y1="19" x2="89" y2="19" stroke="#9ca3af" stroke-width="1"/>
+              <polygon points="85,16 92,19 85,22" fill="#9ca3af"/>
+
+              <!-- Labels -->
+              <text x="32" y="118" text-anchor="middle"
+                font-size="9" fill="#9ca3af" font-family="monospace">π_b</text>
+              <text x="116" y="118" text-anchor="middle"
+                font-size="9" fill="#0f766e" font-family="monospace">π_θ</text>
+            </svg>
           </div>
-        </section>
-      </section>
-    </article>
+          <div class="exp-card-label">Off-Policy Robustness</div>
+          <div class="exp-card-meta">temperature · FP8 · clip sensitivity</div>
+        </a>
+
+        <!--
+          Add new experiment cards here. Example:
+          <a class="exp-card" href="results/async.html">
+            <div class="exp-card-thumb"><svg>…</svg></div>
+            <div class="exp-card-label">Async Training</div>
+            <div class="exp-card-meta">pipeline depth · staleness</div>
+          </a>
+        -->
+
+      </div>
+    </section>
   </main>
 </body>
 
