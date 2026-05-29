@@ -20,11 +20,11 @@ where $\pi_\theta$ is the policy being updated and $\pi_b$ is the behavior polic
 
 If the current policy is close to the behavior policy, the ratios stay nearly uniform. If the batch is stale or mismatched, the ratios spread out and a small number of tokens can dominate. P3O summarizes this with the normalized effective sample size,
 
-$$\mathrm{ESS}(\mathcal{B}) = \frac{\bigl(\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t]\bigr)^2}{\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t^2]} \in \left[\frac{1}{|\mathcal{B}|}, 1\right],$$
+$$e_{\mathcal{B}} = \frac{\bigl(\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t]\bigr)^2}{\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t^2]} \in \left[\frac{1}{|\mathcal{B}|}, 1\right],$$
 
-where $\widehat{\mathbb{E}}_{\mathcal{B}}$ denotes the empirical average over tokens in the batch. When the ratios are nearly uniform, ESS is close to one. When the batch has drifted and the ratios concentrate, ESS falls. A single statistic tells us how much the batch still looks like data from the current policy.
+where $\widehat{\mathbb{E}}_{\mathcal{B}}$ denotes the empirical average over tokens in the batch. When the ratios are nearly uniform, $e_{\mathcal{B}}$ is close to one. When the batch has drifted and the ratios concentrate, $e_{\mathcal{B}}$ falls. A single statistic tells us how much the batch still looks like data from the current policy.
 
-P3O writes that statistic directly into the loss. Let $e_{\mathcal{B}}$ be the stop-gradient value of ESS for the current batch, and let $A_t$ be the token advantage. The P3O objective is
+P3O writes that statistic directly into the loss. With $A_t$ as the token advantage, the P3O objective is
 
 $$
 \mathcal{L}_{\mathrm{P3O}}(\theta) = -\widehat{\mathbb{E}}_{\mathcal{B}}\left[\mathrm{sg}\left(\min\{\rho_t, e_{\mathcal{B}}\}\right) \cdot \log \pi_\theta(y_t \mid x, y_{<t}) \cdot A_t\,\right] + (1 - e_{\mathcal{B}}) \cdot \widehat{\mathbb{E}}_{\mathcal{B}}\left[\mathrm{KL}\left(\pi_\theta(\cdot \mid x, y_{<t}) \| \pi_b(\cdot \mid x, y_{<t})\right)\right].
@@ -58,7 +58,7 @@ The first test is simple: keep the setup fixed and sweep the GRPO clip range. We
 
 The result is the problem in one plot. GRPO's reward trajectory changes substantially as the clip range changes. A clip that is too small can over-constrain the update; a clip that is too large can allow high-variance ratio terms to dominate. The right value depends on the regime. P3O avoids that choice by reading the batch directly: when the ratios are stable, ESS stays high and the update remains loose; when the ratios concentrate, ESS falls and the update becomes conservative.
 
-![GRPO reward trajectories at three clip values vs. a single P3O run](assets/episode_two/clip_sensitivity_reward.png)
+<img src="assets/episode_two/clip_sensitivity_reward.png" alt="GRPO reward trajectories at three clip values vs. a single P3O run" style="max-width: 640px; margin: 24px auto;">
 
 On Qwen3-4B-Thinking-2507 and Qwen2.5-1.5B, P3O matches or exceeds the best GRPO clip setting while being run once, with no clip hyper-parameter. The point is not that P3O found a better constant. The point is that the constant disappeared.
 
@@ -68,7 +68,7 @@ The next question is what happens when the rollout distribution is intentionally
 
 This is exactly where fixed clipping becomes brittle. The clip range was chosen before the batch was seen, so it cannot know whether the current ratios are mostly harmless or badly concentrated. In the paper, GRPO degrades under these temperature-induced shifts, while P3O remains stable because ESS measures the shift from the current batch and adjusts the cap and regularizer accordingly.
 
-![Reward trajectories under sampling-temperature shift: GRPO degrades while P3O remains stable](assets/episode_two/temp_robustness_reward.png)
+<img src="assets/episode_two/temp_robustness_reward.png" alt="Reward trajectories under sampling-temperature shift: GRPO degrades while P3O remains stable" style="max-width: 640px; margin: 24px auto;">
 
 This experiment is important because the mismatch is controlled. Nothing exotic is happening: the policy is not replaced by a completely different model, and the task is not changed. The data is simply generated under a different sampling distribution. That alone is enough to expose the weakness of a fixed clip.
 
@@ -78,7 +78,7 @@ The more practical version of the same problem appears in large-scale training s
 
 In the paper, this setting creates a sharp failure mode for GRPO. Under BF16 training with FP8 rollouts, GRPO initially improves but then collapses later in training. P3O continues to train stably under the same training configuration. No new loss, no new tuning rule, no special FP8 correction. The ESS reads the ratio shift from the batch and tightens the update when the batch becomes less reliable.
 
-![Reward trajectories under BF16 training with FP8 rollouts: GRPO collapses while P3O remains stable](assets/episode_two/fp8_reward_curves.png)
+<img src="assets/episode_two/fp8_reward_curves.png" alt="Reward trajectories under BF16 training with FP8 rollouts: GRPO collapses while P3O remains stable" style="max-width: 640px; margin: 24px auto;">
 
 This is the most important experiment for the systems story. At scale, off-policyness is not just a theoretical concern. It is created by the infrastructure: precision, rollout engines, sampling settings, stale weights, and heterogeneous workers. If the algorithm assumes the data is fresh when the system makes it stale, training can quietly optimize the wrong surrogate.
 
