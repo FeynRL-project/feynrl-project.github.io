@@ -88,9 +88,11 @@ The broader lesson is simple. Fixed clipping asks the practitioner to guess the 
 
 ## FeynRL Made This Possible
 
-All experiments in the paper were run on [FeynRL](https://github.com/FeynRL-project/FeynRL), the algorithm-first post-training framework introduced in Episode 01. FeynRL's separation of concerns meant that going from GRPO to P3O was a single-file change: the loss computation inside `compute_policy_loss(...)`. Rollouts, orchestration, and distributed training were all untouched.
+All experiments in the paper were run on [FeynRL](https://github.com/FeynRL-project/FeynRL), the algorithm-first post-training framework we introduced in Episode 01. P3O is exactly the kind of result FeynRL was designed to enable: a new objective that does not require rewriting the rollout engine, the orchestration, or the distributed training stack.
 
-The change is small but meaningful. Where GRPO computes a clipped surrogate, P3O computes the batch ESS, caps the ratio, and adds an adaptive KL term:
+FeynRL gives researchers a structure where algorithms, rollouts, and orchestration can be iterated on independently. A new loss is a new loss, a new rollout engine is a new rollout engine, and the rest keeps working. These layers communicate through narrow interfaces, so a new RL method is usually a new loss rather than a rewrite of the execution graph.
+
+For P3O, that meant the change from GRPO was a single-file edit in the algorithm layer: the loss computation inside `compute_policy_loss(...)`. Rollouts, orchestration, distributed training, evaluation, and the reward layer all stayed untouched. The clip disappeared, the ESS-driven cap and adaptive KL term appeared in its place, and the surrounding system continued to work without a supporting code change:
 
 ```python
 # GRPO
@@ -101,6 +103,8 @@ e_B  = ess(rho, mask)                              # batch ESS, in [1/|B|, 1]
 cap  = sg(minimum(rho, e_B))                       # adaptive cap, stop-gradient
 loss = -(cap * logp * A).mean() + (1 - e_B) * kl(pi_theta, pi_b).mean()
 ```
+
+This is not a coincidence. It is what FeynRL's separation of concerns is built to deliver. Without it, each of the experiments above (the clip sweep, the temperature shifts, BF16 training with FP8 rollouts, and the held-out benchmark runs) would have required cross-cutting changes through the orchestration and rollout code, and the comparison between GRPO and P3O would have been muddied by infrastructure differences instead of isolated to the loss.
 
 ## Where the Decision Lives
 
