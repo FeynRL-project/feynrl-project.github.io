@@ -90,7 +90,7 @@ The broader lesson is simple. Fixed clipping asks the practitioner to guess the 
 
 All experiments in the paper were run on [FeynRL](https://github.com/FeynRL-project/FeynRL), the algorithm-first post-training framework we introduced in Episode 01. P3O is exactly the kind of result FeynRL was designed to enable: a new objective that does not require rewriting the rollout engine, the orchestration, or the distributed training stack.
 
-FeynRL gives researchers a structure where algorithms, rollouts, and orchestration can be iterated on independently. A new loss is a new loss, a new rollout engine is a new rollout engine, and the rest keeps working. These layers communicate through narrow interfaces, so a new RL method is usually a new loss rather than a rewrite of the execution graph.
+FeynRL gives researchers and engineers a structure where algorithms, rollouts, and orchestration can be iterated on independently. A new loss is a new loss, a new rollout engine is a new rollout engine, and the rest keeps working. These layers communicate through narrow interfaces, so a new RL method is usually a new loss rather than a rewrite of the execution graph.
 
 For P3O, that meant the change from GRPO was a single-file edit in the algorithm layer: the loss computation inside `compute_policy_loss(...)`. Rollouts, orchestration, distributed training, evaluation, and the reward layer all stayed untouched. The clip disappeared, the ESS-driven cap and adaptive KL term appeared in its place, and the surrounding system continued to work without a supporting code change:
 
