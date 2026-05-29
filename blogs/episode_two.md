@@ -58,6 +58,8 @@ The first test is simple: keep the setup fixed and sweep the GRPO clip range. We
 
 The result is the problem in one plot. GRPO's reward trajectory changes substantially as the clip range changes. A clip that is too small can over-constrain the update; a clip that is too large can allow high-variance ratio terms to dominate. The right value depends on the regime. P3O avoids that choice by reading the batch directly: when the ratios are stable, ESS stays high and the update remains loose; when the ratios concentrate, ESS falls and the update becomes conservative.
 
+![GRPO reward trajectories at three clip values vs. a single P3O run](assets/episode_two/clip_sensitivity_reward.png)
+
 On Qwen3-4B-Thinking-2507 and Qwen2.5-1.5B, P3O matches or exceeds the best GRPO clip setting while being run once, with no clip hyper-parameter. The point is not that P3O found a better constant. The point is that the constant disappeared.
 
 ### Controlled Off-Policyness: Sampling Temperature
@@ -66,6 +68,8 @@ The next question is what happens when the rollout distribution is intentionally
 
 This is exactly where fixed clipping becomes brittle. The clip range was chosen before the batch was seen, so it cannot know whether the current ratios are mostly harmless or badly concentrated. In the paper, GRPO degrades under these temperature-induced shifts, while P3O remains stable because ESS measures the shift from the current batch and adjusts the cap and regularizer accordingly.
 
+![Reward trajectories under sampling-temperature shift: GRPO degrades while P3O remains stable](assets/episode_two/temp_robustness_reward.png)
+
 This experiment is important because the mismatch is controlled. Nothing exotic is happening: the policy is not replaced by a completely different model, and the task is not changed. The data is simply generated under a different sampling distribution. That alone is enough to expose the weakness of a fixed clip.
 
 ### Practical Off-Policyness: BF16 Training + FP8 Rollouts
@@ -73,6 +77,8 @@ This experiment is important because the mismatch is controlled. Nothing exotic 
 The more practical version of the same problem appears in large-scale training systems. A common setup is to train in BF16 but generate rollouts using an FP8-quantized policy. This can make rollout generation faster, especially for long completions, but it also means the rollout policy and the training policy no longer assign exactly the same token probabilities. The mismatch shows up directly in the importance ratios.
 
 In the paper, this setting creates a sharp failure mode for GRPO. Under BF16 training with FP8 rollouts, GRPO initially improves but then collapses later in training. P3O continues to train stably under the same training configuration. No new loss, no new tuning rule, no special FP8 correction. The ESS reads the ratio shift from the batch and tightens the update when the batch becomes less reliable.
+
+![Reward trajectories under BF16 training with FP8 rollouts: GRPO collapses while P3O remains stable](assets/episode_two/fp8_reward_curves.png)
 
 This is the most important experiment for the systems story. At scale, off-policyness is not just a theoretical concern. It is created by the infrastructure: precision, rollout engines, sampling settings, stale weights, and heterogeneous workers. If the algorithm assumes the data is fresh when the system makes it stale, training can quietly optimize the wrong surrogate.
 
