@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="../styles.css">
 
   <!-- Syntax highlighting for code blocks -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <script>document.addEventListener('DOMContentLoaded', () => { hljs.highlightAll(); });</script>
 
@@ -115,14 +116,14 @@
     }
 
     /* Tighten the gap after a formula box */
-    .formula-box + p {
+    .formula-box+p {
       margin-top: 18px;
     }
 
     /* Centred + bounded images */
     .article-body img.figure {
-      width: auto;
-      max-width: 640px;
+      width: 100%;
+      max-width: 100%;
       margin: 28px auto;
       display: block;
     }
@@ -134,9 +135,13 @@
     <header class="article-header">
       <p class="kicker">Episode 2</p>
       <h1>Trust the Batch</h1>
-      <p class="article-meta"><a href="https://rasoolfa.github.io/" target="_blank" rel="noreferrer">Rasool Fakoor</a> &middot; Murdock Aubry &middot; Nicholas Stranges &middot; Alexander J. Smola</p>
+      <p class="article-meta"><a href="https://rasoolfa.github.io/" target="_blank" rel="noreferrer">Rasool Fakoor</a>
+        &middot; <a href="https://murdockaubry.com/" target="_blank" rel="noreferrer">Murdock Aubry</a>
+        &middot; <a href="https://nstranges.github.io/" target="_blank" rel="noreferrer">Nicholas Stranges</a>
+        &middot; <a href="https://alex.smola.org/" target="_blank" rel="noreferrer">Alexander J. Smola</a></p>
       <div class="actions">
         <a class="button button-primary" href="../index.html">Home</a>
+        <a class="button" href="https://arxiv.org/abs/2605.12380" target="_blank" rel="noreferrer">arXiv</a>
         <a class="button" href="https://github.com/FeynRL-project/FeynRL" target="_blank"
           rel="noreferrer">Repository</a>
       </div>
@@ -161,7 +166,8 @@
       <p>
         At large-model scale, this fragility becomes sharper. Rollouts are expensive, runs are long, and tuning costs
         compound with model scale. Many current methods keep a fixed clip range and build more machinery around it.
-        Decoupled-loss objectives <a href="#ref-hilton2022">[Hilton et al. 2022]</a>, for example, clip the policy ratio against a proximal snapshot
+        Decoupled-loss objectives <a href="#ref-hilton2022">[Hilton et al. 2022]</a>, for example, clip the policy ratio
+        against a proximal snapshot
         of the policy rather than directly against the behavior policy that produced the data, and add a separate cap
         on the outer behavior weight. That helps, but it also creates new choices: how to construct the snapshot, how
         long to keep it, and how to set the cap. Change the task, model, or rollout system, and those choices may need
@@ -170,7 +176,8 @@
 
       <p>
         Our recent work takes the opposite view: do not guess the mismatch before training starts. Measure it from the
-        batch. P3O <a href="#ref-fakoor2026">[Fakoor et al. 2026]</a> treats measurable policy mismatch as a feature, not a burden. The mismatch between the
+        batch. P3O <a href="#ref-fakoor2026">[Fakoor et al. 2026]</a> treats measurable policy mismatch as a feature,
+        not a burden. The mismatch between the
         current policy and the behavior policy that produced the batch is already visible in the policy-ratio
         distribution. P3O reads that signal directly and uses it to decide how much to trust the update. The result is
         a single batch-adaptive objective that handles fresh and stale data inside the same loss, without introducing a
@@ -208,7 +215,8 @@
         <p class="article-callout-kicker">Effective Sample Size</p>
         <p>
           $$
-          e_{\mathcal{B}} = \frac{\bigl(\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t]\bigr)^2}{\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t^2]}
+          e_{\mathcal{B}} =
+          \frac{\bigl(\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t]\bigr)^2}{\widehat{\mathbb{E}}_{\mathcal{B}}[\rho_t^2]}
           \in \left[\frac{1}{|\mathcal{B}|},\, 1\right],
           $$
         </p>
@@ -231,7 +239,8 @@
           -\widehat{\mathbb{E}}_{\mathcal{B}}\!\left[\,\mathrm{sg}\!\left(\min\{\rho_t,\, e_{\mathcal{B}}\}\right)
           \cdot \log \pi_\theta(y_t \mid x, y_{&lt;t}) \cdot A_t\,\right]
           + (1 - e_{\mathcal{B}}) \cdot
-          \widehat{\mathbb{E}}_{\mathcal{B}}\!\left[\,\mathrm{KL}\!\left(\pi_\theta(\cdot \mid x, y_{&lt;t})\,\|\,\pi_b(\cdot
+          \widehat{\mathbb{E}}_{\mathcal{B}}\!\left[\,\mathrm{KL}\!\left(\pi_\theta(\cdot \mid x,
+          y_{&lt;t})\,\|\,\pi_b(\cdot
           \mid x, y_{&lt;t})\right)\right].
           $$
         </p>
@@ -511,14 +520,113 @@
         in its place, and the surrounding system continued to work without a supporting code change:
       </p>
 
-<pre><code class="language-python"># GRPO
-loss = -minimum(rho * A, clip(rho, 1 - eps, 1 + eps) * A).mean()
+      <div class="gh-diff" role="group" aria-label="GRPO to P3O split diff">
+        <div class="gh-diff-bar">
+          <div class="gh-diff-file">
+            <span class="gh-diff-file-icon" aria-hidden="true"></span>
+            <a href="https://github.com/FeynRL-project/FeynRL/blob/main/algs/GRPO/grpo.py" target="_blank"
+              rel="noreferrer">algs/GRPO/grpo.py → algs/P3O/p3o.py</a>
+          </div>
+          <span class="gh-diff-chip">Split</span>
+        </div>
+        <div class="gh-diff-columns" aria-hidden="true">
+          <span>GRPO</span>
+          <span>P3O</span>
+        </div>
+        <div class="gh-diff-hunk"><code>@@ compute_policy_loss(...)</code></div>
+        <div class="gh-diff-split">
+          <div class="gh-diff-pane">
+            <table class="gh-diff-side-table">
+              <tbody>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">1</td>
+                  <td class="gh-diff-codecell"><code>raw_logratio = (logprobs - old_logprobs).to(torch.float32)</code>
+                  </td>
+                </tr>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">2</td>
+                  <td class="gh-diff-codecell"><code>logratio = torch.where(mask_bool, raw_logratio, ...)</code></td>
+                </tr>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">3</td>
+                  <td class="gh-diff-codecell"><code>ratio = torch.exp(logratio)</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-del">
+                  <td class="gh-diff-num">4</td>
+                  <td class="gh-diff-codecell"><code>unclipped = ratio * adv</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-del">
+                  <td class="gh-diff-num">5</td>
+                  <td class="gh-diff-codecell">
+                    <code>clip_adv = torch.clamp(ratio, 1.0 - clip_low, 1.0 + clip_high) * adv</code>
+                  </td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-del">
+                  <td class="gh-diff-num">6</td>
+                  <td class="gh-diff-codecell"><code>pi_sum = -(torch.minimum(unclipped, clip_adv) * mask).sum()</code>
+                  </td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-empty">
+                  <td class="gh-diff-num gh-diff-num-empty"></td>
+                  <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-empty">
+                  <td class="gh-diff-num gh-diff-num-empty"></td>
+                  <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-empty">
+                  <td class="gh-diff-num gh-diff-num-empty"></td>
+                  <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="gh-diff-pane">
+            <table class="gh-diff-side-table">
+              <tbody>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">1</td>
+                  <td class="gh-diff-codecell"><code>raw_logratio = (logprobs - old_logprobs).to(torch.float32)</code>
+                  </td>
+                </tr>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">2</td>
+                  <td class="gh-diff-codecell"><code>logratio = torch.where(mask_bool, raw_logratio, ...)</code></td>
+                </tr>
+                <tr class="gh-diff-row">
+                  <td class="gh-diff-num">3</td>
+                  <td class="gh-diff-codecell"><code>ratio = torch.exp(logratio)</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-add">
+                  <td class="gh-diff-num">4</td>
+                  <td class="gh-diff-codecell"><code>ess_factor = self.calculate_ess(ratio, mask_bool)</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-add">
+                  <td class="gh-diff-num">5</td>
+                  <td class="gh-diff-codecell"><code>kl_behavioral = compute_kl(logprobs, old_logprobs)</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-add">
+                  <td class="gh-diff-num">6</td>
+                  <td class="gh-diff-codecell"><code>rho = torch.clamp(ratio, min=0, max=ess_factor)</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-add">
+                  <td class="gh-diff-num">7</td>
+                  <td class="gh-diff-codecell"><code>pi_sum = -(rho.detach() * logprobs * adv * mask).sum()</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-add">
+                  <td class="gh-diff-num">8</td>
+                  <td class="gh-diff-codecell"><code>loss = pi_sum + (1 - ess_factor) * kl_behavioral</code></td>
+                </tr>
+                <tr class="gh-diff-row gh-diff-row-empty">
+                  <td class="gh-diff-num gh-diff-num-empty"></td>
+                  <td class="gh-diff-codecell gh-diff-codecell-empty"><code></code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-# P3O
-e_B  = ess(rho, mask)                              # batch ESS, in [1/|B|, 1]
-cap  = sg(minimum(rho, e_B))                       # adaptive cap, stop-gradient
-loss = -(cap * logp * A).mean() + (1 - e_B) * kl(pi_theta, pi_b).mean()
-</code></pre>
 
       <p>
         This is not a coincidence. It is what FeynRL's separation of concerns is built to deliver. Without that
@@ -557,7 +665,7 @@ loss = -(cap * logp * A).mean() + (1 - e_B) * kl(pi_theta, pi_b).mean()
       <p id="ref-shao2024">
         <strong>Shao et al. 2024.</strong> Z. Shao, P. Wang, Q. Zhu, R. Xu, J. Song, X. Bi, H. Zhang, M. Zhang, Y. K.
         Li, Y. Wu, D. Guo. <em>DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language
-        Models</em>.
+          Models</em>.
         <a href="https://arxiv.org/abs/2402.03300" target="_blank" rel="noreferrer">arXiv:2402.03300</a>, 2024.
       </p>
 
@@ -576,8 +684,8 @@ loss = -(cap * logp * A).mean() + (1 - e_B) * kl(pi_theta, pi_b).mean()
       <div class="article-break" aria-hidden="true"></div>
 
       <div class="actions" style="margin-top: 28px;">
-        <a class="button button-primary" href="https://arxiv.org/abs/2605.12380" target="_blank"
-          rel="noreferrer">Read the Paper</a>
+        <a class="button button-primary" href="https://arxiv.org/abs/2605.12380" target="_blank" rel="noreferrer">Read
+          the Paper</a>
         <a class="button" href="https://github.com/FeynRL-project/FeynRL/tree/main/algs/P3O" target="_blank"
           rel="noreferrer">P3O in FeynRL</a>
         <a class="button" href="../index.html">Home</a>
