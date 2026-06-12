@@ -8,6 +8,7 @@
   <meta name="description"
     content="Episode 2 of the FeynRL blog series: Trust the Batch. P3O measures off-policy mismatch from the batch instead of guessing it before training.">
   <link rel="stylesheet" href="../styles.css">
+  <script src="../theme.js" defer></script>
 
   <!-- Syntax highlighting for code blocks -->
   <link rel="stylesheet"
@@ -32,7 +33,7 @@
     .formula-box {
       margin: 22px 0;
       padding: 18px 22px;
-      background: #fafafa;
+      background: var(--surface);
       border: 1px solid var(--line);
       border-left: 3px solid var(--accent);
       overflow-x: auto;
@@ -58,7 +59,7 @@
     }
 
     .article-body table.results-table thead th {
-      background: #f3f4f4;
+      background: var(--surface-strong);
       color: var(--fg);
       font-weight: 700;
       border-bottom: 1px solid var(--fg);
@@ -74,7 +75,7 @@
     /* Sub-header rows that group benchmark variants */
     .article-body table.results-table tbody tr.group-row td {
       padding: 10px 14px;
-      background: #f3f4f4;
+      background: var(--surface-strong);
       color: var(--muted);
       font-size: 0.88rem;
     }
@@ -102,7 +103,7 @@
     .article-body p code,
     .article-body li code {
       padding: 1px 6px;
-      background: #f3f4f4;
+      background: var(--surface-strong);
       border: 1px solid var(--line);
       border-radius: 3px;
       font-size: 0.88rem;
@@ -133,6 +134,13 @@
 <body>
   <main class="page page-article">
     <header class="article-header">
+      <a class="brand-lockup brand-lockup-compact" href="../index.html" aria-label="FeynRL home">
+        <img class="brand-logo" src="../assets/feynrl-logo.png" alt="FeynRL logo">
+        <div class="brand-wordmark">
+          <span class="brand-name">FeynRL</span>
+          <span class="brand-tagline">Understand What You Build</span>
+        </div>
+      </a>
       <p class="kicker">Episode 2</p>
       <h1>Trust the Batch</h1>
       <p class="article-meta"><a href="https://rasoolfa.github.io/" target="_blank" rel="noreferrer">Rasool Fakoor</a>
@@ -142,8 +150,7 @@
       <div class="actions">
         <a class="button button-primary" href="../index.html">Home</a>
         <a class="button" href="https://arxiv.org/abs/2605.12380" target="_blank" rel="noreferrer">arXiv</a>
-        <a class="button" href="https://github.com/FeynRL-project/FeynRL" target="_blank"
-          rel="noreferrer">Repository</a>
+        <a class="button" href="https://github.com/FeynRL-project/FeynRL" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </header>
 
